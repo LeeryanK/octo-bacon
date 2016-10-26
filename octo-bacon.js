@@ -82,4 +82,6 @@
         replace(keywordReg, '<span class="ob-js-kw">$1</span>').
         replace(funcReg, '<span class="ob-js-fm">$1</span>');
     });
+  
+  window['OctoBacon'] = OctoBacon;
 })();
