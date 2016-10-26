@@ -10,8 +10,8 @@
    */
   function OctoBacon(querySelectorString, syntaxHighlighter, styleClasses) {
     this.container_ = document.querySelector(querySelectorString);
-    this.createAndSetUpElements_();
     this.styles = styleClasses;
+    this.createAndSetUpElements_();
 
     var lang = syntaxHighlighter.language;
     var interval = syntaxHighlighter.interval;
@@ -40,7 +40,9 @@
      textarea.addEventListener('scroll', function() {
        div.scrollTop = textarea.scrollTop;
      });
-
+     this.container_.appendChild(textarea);
+     this.container_.appendChild(div);
+     
      this.textarea = textarea;
      this.div = div;
    };
@@ -82,4 +84,6 @@
         replace(keywordReg, '<span class="ob-js-kw">$1</span>').
         replace(funcReg, '<span class="ob-js-fm">$1</span>');
     });
+  
+  window['OctoBacon'] = OctoBacon;
 })();
