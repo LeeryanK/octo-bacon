@@ -40,7 +40,9 @@
      textarea.addEventListener('scroll', function() {
        div.scrollTop = textarea.scrollTop;
      });
-
+     this.container_.appendChild(textarea);
+     this.container_.appendChild(div);
+     
      this.textarea = textarea;
      this.div = div;
    };
