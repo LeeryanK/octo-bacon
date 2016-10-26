@@ -10,8 +10,8 @@
    */
   function OctoBacon(querySelectorString, syntaxHighlighter, styleClasses) {
     this.container_ = document.querySelector(querySelectorString);
-    this.createAndSetUpElements_();
     this.styles = styleClasses;
+    this.createAndSetUpElements_();
 
     var lang = syntaxHighlighter.language;
     var interval = syntaxHighlighter.interval;
