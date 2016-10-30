@@ -65,14 +65,13 @@
   OctoBacon.prototype.needsToStartHighlighting_ = false;
 
   /**
-   * @static
    * Loads a syntax highlighter language from a base path URL.
    * @param {string} langName The name of the language.
    * @param {string} pathName The base URL for the language. The director must
    *   have a /lang.js and a /lang.css in it.
    * @param {string} exportObj Which global object to append the language to.
    */
-  OctoBacon.addHighlighter = function(langName, pathName, exportObj) {
+  OctoBacon.prototype.addHighlighter = function(langName, pathName, exportObj) {
     console.log('Loading syntax highlighter for ' + langName);
     var script = document.createElement('script');
     var styleTag = document.createElement('link');
