@@ -57,12 +57,19 @@
 
   OctoBacon.prototype.startHighlighting = function() {
     this.highlighterIntervalId_ = window.setInterval((function() {
-      this.langs[this.highlightingOptions.lang].highlight(this);
+      this.highlightUsing_(this.langs[this.highlightingOptions.lang].highlight);
     }).bind(this), this.highlightingOptions.interval);
   };
 
   OctoBacon.prototype.stopHighlighting = function() {
     window.clearInterval(this.highlighterIntervalId_);
+  };
+  
+  /**
+   * @param {function(string):string} highlight A highlighting function that takes the unhighlighted text and returns the highlighted text.
+   */
+  OctoBacon.prototype.highlightUsing_ = function(highlight) {
+    div.innerHTML = highlight(this.textarea.value);
   };
 
   OctoBacon.prototype.needsHighlighting_ = false;
