@@ -4,21 +4,29 @@
    * Class for a text-editor
    * @param {string} querySelectorString The query selector string for the
    *   container div.
-   * @param {object} syntaxHighlightingLanguage The language to use syntax
+   * @param {object} highlightingOptions The language to use syntax
    *   highlighting for.
    * @param {object} styleClasses The class names for elements to be assigned.
+   * @param {string} exportObj The global variable name for async scripts to
+   *   things to.
    */
-  function OctoBacon(querySelectorString, syntaxHighlighter, styleClasses) {
+  function OctoBacon(querySelectorString, highlightingOptions, styleClasses, exportObj) {
+    var lang = highlightingOptions.lang;
+    var interval = highlightingOptions.interval;
     this.container_ = document.querySelector(querySelectorString);
     this.styles = styleClasses;
+    this.langs = {};
+    this.highlightingOptions = {
+      lang: lang,
+      interval: interval
+    };
+    this.exportObj = exportObj;
     this.createAndSetUpElements_();
 
-    var lang = syntaxHighlighter.language;
-    var interval = syntaxHighlighter.interval;
-    if (lang in OctoBacon.highlighters && interval > 0) {
-      this.highlighterIntervalId = window.setInterval(function() {
-        OctoBacon.highlighters[lang].highlight(this);
-      }, interval);
+    if (lang in this.langs) {
+      this.startHighlighting();
+    } else {
+      this.needsHighlighting_ = true;
     }
   }
 
@@ -42,48 +50,49 @@
      });
      this.container_.appendChild(textarea);
      this.container_.appendChild(div);
-     
+
      this.textarea = textarea;
      this.div = div;
    };
 
-    function OctoBaconSyntaxHighlighter(styles, highlight) {
-      var style = document.createElement('style');
-      var css = '';
-      for (var htmlClass in styles) {
-        var color = styles[htmlClass];
-        css += ('.' + htmlClass + '{' + 'color: ' + color + ';}\n');
-      }
-      style.innerHTML = css;
-      document.getElementsByTagName('head')[0].appendChild(style);
+  OctoBacon.prototype.startHighlighting = function() {
+    this.highlighterIntervalId_ = window.setInterval((function() {
+      this.langs[this.highlightingOptions.lang].highlight(this);
+    }).bind(this), this.highlightingOptions.interval);
+  };
 
-      this.stylesObj = styles;
-      this.highlight = function(octoBaconInstance) {
-        var highlightedText = highlight(octoBaconInstance.textarea.value);
-        octoBaconInstance.div.innerHTML = highlightedText;
-      };
+  OctoBacon.prototype.stopHighlighting = function() {
+    window.clearInterval(this.highlighterIntervalId_);
+  };
+
+  OctoBacon.prototype.needsHighlighting_ = false;
+
+  /**
+   * Loads support for a language from a base path URL.
+   * @param {string} langName The name of the language.
+   * @param {string} pathName The base URL for the language. The director must
+   *   have a /lang.js and a /lang.css in it.
+   */
+  OctoBacon.prototype.addLangSupport = function(langName, pathName) {
+    console.log('Loading syntax highlighter for ' + langName);
+    var script = document.createElement('script');
+    var styleTag = document.createElement('link');
+    var head = document.getElementsByTagName('head')[0];
+
+    if (pathName.substring(pathName.length - 1) !== '/') {
+      pathName += '/';
     }
 
-    OctoBacon.highlighters = {};
+    script.src = pathName + 'lang.js';
+    styleTag.href = pathName + 'lang.css';
+    styleTag.rel = 'stylesheet';
 
-    OctoBacon.highlighters.js = new OctoBaconSyntaxHighlighter({
-      'ob-js-kw': 'purple', // keywords
-      'ob-js-bnun': 'cyan', // booleans, null, undefined, numbers
-      'ob-js-str': 'blue', // strings
-      'ob-js-fm': 'magenta', // function or method
-    }, function(text) {
-      var strReg = /'[^']*'/g;
-      var strReg2 = /"[^"]*"/g;
-      var bnunReg = /\b(\d|true|false|null|undefined)\b/g;
-      var keywordReg = /\b(var|let|const|function|class|if|else|while|for|in|of|switch|case|try|catch|throw|finally|void|continue|break|return|do)\b/g;
-      var funcReg = /\b(\w*())\b/g;
+    script.setAttribute('data-export-obj', this.exportObj);
+    script.setAttribute('data-export-name', langName);
 
-      return text.replace(strReg, '<span class="ob-js-str">$&</span>').
-        replace(strReg2, '<span class="ob-js-str">$&</span>').
-        replace(bnunReg, '<span class="ob-js-bnun">$1</span>').
-        replace(keywordReg, '<span class="ob-js-kw">$1</span>').
-        replace(funcReg, '<span class="ob-js-fm">$1</span>');
-    });
-  
+    head.appendChild(script);
+    head.appendChild(styleTag);
+  };
+
   window['OctoBacon'] = OctoBacon;
 })();
