@@ -17,9 +17,9 @@
     var bnunReg = /\b(true|false|null|undefined|[\d])(?=[^\w])/g;
     /** @todo Add special object support using https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects*/
 
-    text = text.replace(strDoubleQuoteReg, '<span class="ob-js-str>$&</span>');
-    text = text.replace(strSingleQuoteReg, '<span class="ob-js-str>$&</span>');
-    text = text.replace(keywordOrOpReg, '<span class="ob-js-kwo>$1</span>');
+    text = text.replace(strDoubleQuoteReg, '<span class="ob-js-str">$&</span>');
+    text = text.replace(strSingleQuoteReg, '<span class="ob-js-str">$&</span>');
+    text = text.replace(keywordOrOpReg, '<span class="ob-js-kwo">$1</span>');
     text = text.replace(specialReg, '<span class="ob-js-sp">$1</span>');
     text = text.replace(funcCallReg, '<span class="fm">$1</span>');
     text = text.replace(multiLineCommentReg, '<span class="com">$1</span>');
