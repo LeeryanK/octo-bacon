@@ -11,7 +11,7 @@
     var strDoubleQuoteReg = /"(\\"|[^"])*"/g;
     var keywordOrOpReg = /\b(new|var|if|do|function|while|switch|for|foreach|in|continue|break)(?=[^\w])/g;
     var specialReg = /\b(this|arguments|global|require|document|window|Array|String|Object|Number|Date|Math|RegExp|Error|Boolean|Function|Symbol|JSON|Map|Set|Generator)(?=[^\w])/g;
-    var funcCallReg = /\b([a-zA-z_][a-zA-z_\d]*)(?=[^\w])/g;
+    var funcCallReg = /\b([a-zA-z_][a-zA-z_\d]*)\(([\d]*|[a-zA-z_][a-zA-z_\d]*)(\,(\w*)([\d]*|[a-zA-z_][a-zA-z_\d]*))*\)(?=[^\w])/g;
     var multiLineCommentReg  = /(\/\*.*\*\/)/g;
     var oneLineCommentReg = /(\/\/.*)/g;
     var bnunReg = /\b(true|false|null|undefined|[\d])(?=[^\w])/g;
