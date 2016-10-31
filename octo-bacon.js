@@ -7,20 +7,23 @@
    * @param {object} highlightingOptions The language to use syntax
    *   highlighting for.
    * @param {object} styleClasses The class names for elements to be assigned.
+   * @param {string} exportObj The global variable name for async scripts to
+   *   things to.
    */
-  function OctoBacon(querySelectorString, highlightingOptions, styleClasses) {
+  function OctoBacon(querySelectorString, highlightingOptions, styleClasses, exportObj) {
     var lang = highlightingOptions.lang;
     var interval = highlightingOptions.interval;
     this.container_ = document.querySelector(querySelectorString);
     this.styles = styleClasses;
-    this.highlighters = {};
+    this.langs = {};
     this.highlightingOptions = {
       lang: lang,
       interval: interval
     };
+    this.exportObj = exportObj;
     this.createAndSetUpElements_();
 
-    if (lang in this.highlighters) {
+    if (lang in this.langs) {
       this.startHighlighting();
     } else {
       this.needsToStartHighlighting_ = true;
@@ -54,7 +57,7 @@
 
   OctoBacon.prototype.startHighlighting = function() {
     this.highlighterIntervalId_ = window.setInterval((function() {
-      this.highlighters[this.highlightingOptions.lang].highlight(this);
+      this.langs[this.highlightingOptions.lang].highlight(this);
     }).bind(this), this.highlightingOptions.interval);
   };
 
@@ -65,13 +68,12 @@
   OctoBacon.prototype.needsToStartHighlighting_ = false;
 
   /**
-   * Loads a syntax highlighter language from a base path URL.
+   * Loads support for a language from a base path URL.
    * @param {string} langName The name of the language.
    * @param {string} pathName The base URL for the language. The director must
    *   have a /lang.js and a /lang.css in it.
-   * @param {string} exportObj Which global object to append the language to.
    */
-  OctoBacon.prototype.addHighlighter = function(langName, pathName, exportObj) {
+  OctoBacon.prototype.addLangSupport = function(langName, pathName) {
     console.log('Loading syntax highlighter for ' + langName);
     var script = document.createElement('script');
     var styleTag = document.createElement('link');
@@ -83,8 +85,9 @@
 
     script.src = pathName + 'lang.js';
     styleTag.href = pathName + 'lang.css';
+    styleTag.rel = 'stylesheet';
 
-    script.setAttribute('data-export-obj', exportObj);
+    script.setAttribute('data-export-obj', this.exportObj);
     script.setAttribute('data-export-name', langName);
 
     head.appendChild(script);
