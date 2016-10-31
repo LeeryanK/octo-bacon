@@ -69,7 +69,7 @@
    * @param {function(string):string} highlight A highlighting function that takes the unhighlighted text and returns the highlighted text.
    */
   OctoBacon.prototype.highlightUsing_ = function(highlight) {
-    div.innerHTML = highlight(this.textarea.value);
+    this.div.innerHTML = highlight(this.textarea.value);
   };
 
   OctoBacon.prototype.needsHighlighting_ = false;
