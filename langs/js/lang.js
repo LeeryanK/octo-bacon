@@ -21,7 +21,7 @@
     text = text.replace(strSingleQuoteReg, '<span class="ob-js-str">$&</span>');
     text = text.replace(keywordOrOpReg, '<span class="ob-js-kwo">$1</span>');
     text = text.replace(specialReg, '<span class="ob-js-sp">$1</span>');
-    text = text.replace(funcCallReg, '<span class="fm">$1</span>$2');
+    text = text.replace(funcCallReg, '<span class="fm">$1</span>($2)');
     text = text.replace(multiLineCommentReg, '<span class="com">$1</span>');
     text = text.replace(oneLineCommentReg, '<span class="com">$1</span>');
     text = text.replace(bnunReg, '<span class="bnun">$1</span>');
