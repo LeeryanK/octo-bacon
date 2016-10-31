@@ -33,5 +33,7 @@
 
   };
 
-  bacon.startHighlighting();
+  if (bacon.needsHighlighting_) {
+    bacon.startHighlighting();
+  }
 })();

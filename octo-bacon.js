@@ -26,7 +26,7 @@
     if (lang in this.langs) {
       this.startHighlighting();
     } else {
-      this.needsToStartHighlighting_ = true;
+      this.needsHighlighting_ = true;
     }
   }
 
@@ -65,7 +65,7 @@
     window.clearInterval(this.highlighterIntervalId_);
   };
 
-  OctoBacon.prototype.needsToStartHighlighting_ = false;
+  OctoBacon.prototype.needsHighlighting_ = false;
 
   /**
    * Loads support for a language from a base path URL.
